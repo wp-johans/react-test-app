@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import Classes from './App.css';
 import Person from './Person/Person';
 
 class App extends Component {
@@ -41,7 +41,7 @@ class App extends Component {
   render() {
     let persons = null;
 
-    let buttonClass = 'teal';
+    let buttonClass = Classes.teal;
 
     if (this.state.showPersons) {
       persons = (
@@ -58,11 +58,11 @@ class App extends Component {
         </div>
       );
 
-      buttonClass = 'purple';
+      buttonClass = Classes.purple;
     }
 
     return (
-        <div className="App ">
+        <div className={Classes.App}>
           <h1>Hi, i'm Johan's first react app!</h1>
           <button className={buttonClass}
             onClick={this.togglePersonsHandler}>Toggle persons</button>
