@@ -2,7 +2,7 @@ import React from 'react';
 import Classes from './Person.css';
 
 const person = (props) => {
-        return (
+    return (
         <div className={Classes.Person} >
             <p onClick={props.click}>I'm {props.name} and I am {props.age} years old!</p>
             <p>{props.hobby}</p>

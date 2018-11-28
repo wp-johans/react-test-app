@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Classes from './App.css';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons'
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
 
@@ -30,8 +31,6 @@ class App extends Component {
   }
 
   deletePersonHandler = (personIndex) => {
-    // const persons = this.state.persons.slice();
-
     // Using the spread syntax.
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
@@ -41,33 +40,22 @@ class App extends Component {
   render() {
     let persons = null;
 
-    let buttonClass = Classes.teal;
-
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((p, index) =>
-            <Person
-              key={p.id}
-              click={this.deletePersonHandler.bind(this, index)}
-              changed={(event) => this.nameChangedHandler(event, p.id)}
-              name={p.name}
-              age={p.age}
-              hobby={p.hobby} />
-          )}
-        </div>
+        <Persons
+          persons={this.state.persons}
+          clicked={this.deletePersonHandler}
+          changed={this.nameChangedHandler} />
       );
-
-      buttonClass = Classes.purple;
     }
 
     return (
-        <div className={Classes.App}>
-          <h1>Hi, i'm Johan's first react app!</h1>
-          <button className={buttonClass}
-            onClick={this.togglePersonsHandler}>Toggle persons</button>
-          {persons}
-        </div>
+      <div className={Classes.App}>
+        <Cockpit
+          showPersons={this.state.showPersons}
+          togglePersons={this.togglePersonsHandler} />
+        {persons}
+      </div>
     );
   }
 }
