@@ -8,12 +8,13 @@ const cockpit = (props) => {
         buttonClass = Classes.purple;
     }
 
+    // <></> Can be used as wrapper instead of <Aux></Aux> from "../../hoc/Aux.js" when you dont want a useless div as wrapper.
     return (
-        <div>
+        <> 
             <h1>Hi, i'm Johan's first react app!</h1>
             <button className={buttonClass}
                 onClick={props.togglePersons}>Toggle persons</button>
-        </div>
+        </>
     );
 };
 

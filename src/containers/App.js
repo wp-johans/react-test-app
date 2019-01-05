@@ -4,7 +4,25 @@ import Persons from '../components/Persons/Persons'
 import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    console.log('[App.js] From inside the constructor!', props)
+  }
 
+  componentWillMount() {
+    console.log('[App.js] From inside componentWillMount()')
+  }
+
+  componentDidMount() {
+    console.log('[App.js] From inside componentDidMount()')
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('SHOULD UPDATE [App.js]')
+    return nextState.persons !== this.state.persons ||
+    nextState.showPersons !== this.state.showPersons
+  }
+  
   state = {
     persons: [
       { id: 1, name: 'Johan', age: 29, hobby: 'My hobby is coding' },
@@ -38,6 +56,7 @@ class App extends Component {
   }
 
   render() {
+    console.log('[App.js] From inside render()')
     let persons = null;
 
     if (this.state.showPersons) {
@@ -51,6 +70,7 @@ class App extends Component {
 
     return (
       <div className={Classes.App}>
+      <button onClick={() => {this.setState({showPersons: true})}}>Show persons</button>
         <Cockpit
           showPersons={this.state.showPersons}
           togglePersons={this.togglePersonsHandler} />
