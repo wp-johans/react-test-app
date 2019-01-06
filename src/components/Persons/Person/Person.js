@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Classes from './Person.css';
 import PropTypes from 'prop-types';
 import withClass2 from '../../../hoc/withClass2';
+import { AuthContext } from '../../../containers/App'
 
 class Person extends Component {
     constructor(props) {
@@ -26,6 +27,9 @@ class Person extends Component {
         console.log('[Person.js] From inside render()')
         return (
             <>
+                <AuthContext.Consumer>
+                    {auth => auth.isAuth ? <p>I'm authenticated</p> : null}
+                </AuthContext.Consumer>
                 <p onClick={this.props.click}>I'm {this.props.name} and I am {this.props.age} years old!</p>
                 <p>{this.props.hobby}</p>
                 <input

@@ -1,10 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import WithClass from '../hoc/WithClass';
 
-class App extends Component {
+// The context should be used for global settings, like if the user is authenticated or not.
+// In other cases passing down props is prefered because that makes components looser coupled and less chained together.
+export const AuthContext = React.createContext({
+  isAuth: false,
+  toggleAuth: () => { }
+});
+
+class App extends PureComponent {
   constructor(props) {
     super(props)
     console.log('[App.js] From inside the constructor!', props)
@@ -18,21 +25,37 @@ class App extends Component {
     console.log('[App.js] From inside componentDidMount()')
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    console.log('SHOULD UPDATE [App.js]')
-    return nextState.persons !== this.state.persons ||
-      nextState.showPersons !== this.state.showPersons
-  }
+  // Not needed with a PureComponent
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log('SHOULD UPDATE [App.js]')
+  //   return nextState.persons !== this.state.persons ||
+  //     nextState.showPersons !== this.state.showPersons ||
+  //     nextState.authenticated !== this.state.authenticated
+  // }
 
   state = {
     persons: [
       { id: 1, name: 'Johan', age: 29, hobby: 'My hobby is coding' },
       { id: 2, name: 'Becca', age: 25, hobby: 'My hobby is working' }
     ],
-    toggleClicked: 0
+    toggleClicked: 0,
+    authenticated: false
+  }
+
+  toggleAuthHandler = () => {
+    this.setState(prevState => {
+      return {
+        authenticated: !prevState.authenticated
+      }
+    });
   }
 
   nameChangedHandler = (event, id) => {
+    if (!this.state.authenticated) {
+      alert('You need to log in!');
+      return;
+    }
+
     const personIndex = this.state.persons.findIndex(p =>
       p.id === id
     );
@@ -59,10 +82,19 @@ class App extends Component {
   }
 
   deletePersonHandler = (personIndex) => {
+    if (!this.state.authenticated) {
+      alert('You need to log in!');
+      return;
+    }
+
     // Using the spread syntax.
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({ persons: persons });
+  }
+
+  loginHandler = () => {
+    this.setState({ authenticated: true });
   }
 
   render() {
@@ -84,8 +116,11 @@ class App extends Component {
         <Cockpit
           showPersons={this.state.showPersons}
           togglePersons={this.togglePersonsHandler}
-          toggleClicked={this.state.toggleClicked} />
-        {persons}
+          toggleClicked={this.state.toggleClicked}
+          login={this.loginHandler} />
+        <AuthContext.Provider value={{ isAuth: this.state.authenticated, toggleAuth: this.toggleAuthHandler }}>
+          {persons}
+        </AuthContext.Provider>
       </WithClass>
     );
   }
