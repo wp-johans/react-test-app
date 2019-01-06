@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Classes from './App.css';
-import Persons from '../components/Persons/Persons'
+import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import WithClass from '../hoc/WithClass';
 
 class App extends Component {
   constructor(props) {
@@ -20,14 +21,15 @@ class App extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     console.log('SHOULD UPDATE [App.js]')
     return nextState.persons !== this.state.persons ||
-    nextState.showPersons !== this.state.showPersons
+      nextState.showPersons !== this.state.showPersons
   }
-  
+
   state = {
     persons: [
       { id: 1, name: 'Johan', age: 29, hobby: 'My hobby is coding' },
       { id: 2, name: 'Becca', age: 25, hobby: 'My hobby is working' }
-    ]
+    ],
+    toggleClicked: 0
   }
 
   nameChangedHandler = (event, id) => {
@@ -45,7 +47,15 @@ class App extends Component {
   }
 
   togglePersonsHandler = () => {
-    this.setState({ showPersons: !this.state.showPersons });
+    // Set state with an arrow funktion if the new state depends on the old state and the state might be edited from another place aswell.
+    // By using the arrow function with prevState your are safe!
+    // Reason for this is that this.SetState runs async
+    this.setState((prevState, props) => {
+      return {
+        showPersons: !prevState.showPersons,
+        toggleClicked: prevState.toggleClicked + 1
+      }
+    });
   }
 
   deletePersonHandler = (personIndex) => {
@@ -69,13 +79,14 @@ class App extends Component {
     }
 
     return (
-      <div className={Classes.App}>
-      <button onClick={() => {this.setState({showPersons: true})}}>Show persons</button>
+      <WithClass classes={Classes.App}>
+        <button onClick={() => { this.setState({ showPersons: true }) }}>Show persons</button>
         <Cockpit
           showPersons={this.state.showPersons}
-          togglePersons={this.togglePersonsHandler} />
+          togglePersons={this.togglePersonsHandler}
+          toggleClicked={this.state.toggleClicked} />
         {persons}
-      </div>
+      </WithClass>
     );
   }
 }
