@@ -37,7 +37,8 @@ class Persons extends PureComponent {
                 changed={(event) => this.props.changed(event, p.id)}
                 name={p.name}
                 age={p.age}
-                hobby={p.hobby} />
+                hobby={p.hobby}
+                position={index} />
         )
     }
 }
