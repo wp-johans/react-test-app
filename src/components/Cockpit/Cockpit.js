@@ -20,4 +20,5 @@ const cockpit = (props) => {
     );
 };
 
-export default cockpit;
+// React.memo() wrapping does what PureComponents do to class components but for functional components instead.
+export default React.memo(cockpit);
